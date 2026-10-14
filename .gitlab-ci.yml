@@ -1,0 +1,43 @@
+stages:
+  - deploy
+
+deploy-job:
+  image: registry.handmadegames.org/imagenes-docker/lftp-client
+  stage: deploy
+  environment: production
+
+  before_script:
+    - |
+      set +x
+      echo "Preparando la conexión FTP..."
+
+  script:
+    - |
+      set -e
+      set +x
+
+      echo "Desplegando la aplicación..."
+
+      lftp -e "
+        open $FTP_SERVER;
+        user $FTP_USERNAME $FTP_PASSWORD;
+        mkdir ./$CI_PROJECT_NAME;
+        cd ./$CI_PROJECT_NAME;      
+        mirror -R \
+          --verbose \
+          --no-perms \
+          --parallel=5 \
+          --include ./*** \
+          --exclude README.md \
+          --exclude readme.md \
+          --exclude .gitlab-ci.yml \
+          --exclude .gitignore \
+          --exclude .git/ \
+          --exclude Readme-Images/ \
+          ./ ./;
+        bye;
+      "
+
+      echo "Aplicación desplegada correctamente."
+      echo "Disponible en https://www.handmadegames.org/${FTP_USERNAME}/${CI_PROJECT_NAME}."
+

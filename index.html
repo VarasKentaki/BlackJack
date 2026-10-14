@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>BlackJack</title>
+    <link href="css/estilo.css" rel="stylesheet">
+</head>
+<body>
+<header>
+        <p id="Cabecera">BlackJack</p>
+</header>
+<main>
+        <div id="Botones">
+            <button id="NuevoJuego" onclick="juego.nuevoJuego()" type="button">Nuevo Juego</button>
+            <button id="PedirCarta" onclick="juego.pedirCarta()" type="button">Pedir Carta</button>
+            <button id="Plantarse" onclick="juego.turnoComputadora()" type="button">Plantarse</button>
+        </div>
+        
+        <div id="Jugador">
+            Jugador: <span id="PuntuacionJugador">0</span><span id="MensajeJugador"></span>
+            <div id="CartasJugador">
+                <img id="BocaAbajo" src="cartas/red_back.png">
+            </div>            
+        </div>
+
+        <div id="Computadora">
+            Computadora: <span id="PuntuacionComputadora">0</span><span id="MensajeComputadora"></span>
+            <div id="CartasComputadora">
+                <img id="BocaAbajo2" src="cartas/red_back.png">
+            </div>
+        </div>
+    <script src="js/blackjack.js"></script>
+</main>
+</body>
+</html>

@@ -1,0 +1,160 @@
+body{
+    background-color:darkgreen;
+    color:white;
+    display:grid;
+    grid-template-rows:  69px auto;   
+}
+
+header{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items:center;
+    background-color: black;
+    border:1px solid grey;
+    border-radius:1rem;
+    padding:2rem;
+    margin:0;
+}
+
+#Cabecera{
+color: white;
+font-size: 3rem;
+}
+
+main {
+    background-color:darkgreen;
+    color:white;
+}
+
+#Botones{
+    display:flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items:baseline;
+    margin-top: 0.5rem;
+}
+
+button {
+    border:1px solid rgb(233, 230, 230);
+    text-decoration:none;
+    background-color:rgb(41, 195, 209);
+    display:block;
+    border-radius:2rem;
+    width: 180px;
+    height: 40px;
+    margin-left: 0.4rem;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: larger;    
+}
+
+#PedirCarta{
+    /* color:rgb(22, 21, 21);*/
+    color: white;
+    font-weight: 500;
+    background-color: rgb(172, 28, 35);
+    text-shadow: 2px 2px 4px #000000;
+}
+
+#NuevoJuego{
+
+    color: white;
+    font-weight: 500;
+    background-color: rgb(5, 31, 15);
+    text-shadow: 2px 2px 4px #000000;
+}
+
+#Plantarse{
+
+    color: white;
+    font-weight: 500;
+    background-color: rgb(5, 31, 15);
+    text-shadow: 2px 2px 4px #000000;
+    background-color: rgb(18, 21, 190);
+    box-shadow: rgb(0, 27, 0);
+}
+
+#Computadora,#Jugador{
+    margin-top: 0.5rem;
+    color: white;
+    font-size:3rem;
+    min-height: 400px;
+}
+
+#PuntuacionJugador, #PuntuacionComputadora{
+    font-size:2.5rem;
+}
+
+#CartasJugador, #CartasComputadora{
+    padding-top: 0.4rem;
+    padding-left: 5.5rem;
+}
+
+img{
+    width: 190px;
+    margin-left: -55px;
+    box-shadow: inset 2px 2px 2px rgb(146, 140, 140);
+    border-radius:15px;
+}
+
+#baraja{
+    width: 190px;
+    margin-left: -55px;
+    box-shadow: 2px 2px 2px rgb(73, 71, 71);
+    border-radius:15px;
+}
+
+.perder{
+    color: rgb(245, 243, 243);
+    text-shadow: darkslategray;
+    background-color: darkred;
+    border:1px solid rgb(255, 255, 255);
+    padding: 0.3rem;
+    margin-left: 2rem;;
+    border-radius:1rem;
+    font-style: italic;
+    font-size:2.1rem;   
+}
+
+.blackjack{
+    color: rgb(245, 243, 243);
+    text-shadow: rgb(193, 196, 11);
+    background-color: rgb(2, 1, 0);
+    border:1px solid rgb(255, 255, 255);
+    padding: 0.3rem;
+    margin-left: 2rem;
+    border-radius:1rem;
+    font-style: italic;
+    font-size:2.1rem;  
+}
+
+.ganar{
+    color: rgb(245, 243, 243);
+    text-shadow: rgb(193, 196, 11);
+    background-color: rgb(123, 24, 168);
+    border:1px solid rgb(255, 255, 255);
+    padding: 0.3rem;
+    margin-left: 2rem;
+    border-radius:1rem;
+    font-style: italic;
+    font-size:2.1rem;  
+}
+
+button[disabled]{
+    /* z-index: -1;*/
+    visibility: hidden;
+  }
+
+  button:hover {
+    /* border: 1px solid #0099cc;
+    background-color: #00aacc;
+    color: #ffffff;
+    padding: 5px 10px;
+*/
+    font-style:italic;
+    border:rgb(138, 10, 155) 0.2em solid ;
+    box-shadow:
+    inset 0 -3em 3em rgba(251, 251, 251, 0.1),
+          0 0  0 3px rgb(251, 249, 251),
+          0.3em 0.3em 1em rgba(253, 252, 252, 0.3);
+}
