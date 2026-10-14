@@ -1,204 +1,56 @@
-const juego=(()=>{
-
-const palos=["C", "H", "S", "D"],
-      figuras=["A", "J", "Q", "K"],
-      cartas=[],      
-      PuntuacionJugador=document.querySelector("#PuntuacionJugador"),
-      PuntuacionComputadora=document.querySelector("#PuntuacionComputadora"),
-      CartasJugador=document.querySelector("#CartasJugador"),
-      CartasComputadora=document.querySelector("#CartasComputadora"),
-      MensajeJugador=document.querySelector("#MensajeJugador"),
-      MensajeComputadora=document.querySelector("#MensajeComputadora"),
-      BotonPedirCarta=document.querySelector("#PedirCarta"),
-      BotonPlantarse=document.querySelector("#Plantarse");
-
-let BocaAbajo=document.querySelector("#BocaAbajo"),
-    BocaAbajo2=document.querySelector("#BocaAbajo2"),
-    puntosJugador=0,
-    puntosComputadora=0,
-    mazo=mazoJugador=mazoComputadora=[];
-    
-
-function shuffle(array) {
-    let currentIndex = array.length,  randomIndex; 
-    while (currentIndex != 0) {       
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;       
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]];
+const nuevoJuego = document.getElementById('NuevoJuego');
+const pedirCarta = document.getElementById('PedirCarta');
+const plantarse = document.getElementById('Plantarse');
+plantarse.style.visibility = 'hidden';
+let mazo = [];
+const palos = ['D', 'H', 'S', 'C'];
+const figuras = ['A', 'J', 'Q', 'K'];
+function newMazo() {
+  mazo = [];
+  palos.forEach((palo) => {
+    for (let i = 2; i <= 10; i++) {
+      mazo.push(`${i}${palo}`);
     }
-    return array;
+    figuras.forEach((letra) => {
+      mazo.push(`${letra}${palo}`);
+    });
+  });
 }
-
-
-const descargarCartas= ()=>{    
-    if (cartas.length<1 )
-    {   
-        mazo.forEach(carta=>{
-            const imagen_carta=document.createElement("img");
-            imagen_carta.src=`cartas/${carta}.png`;
-            cartas.pop(imagen_carta);
-        });
-    }
-};
-
-
-const crearMazo=()=>{
-    mazo=[];
-    for(let palo of palos){
-        for(let i=2;i<=10;i++)
-            mazo.push(i + palo);
-        for(let figura of figuras)
-            mazo.push(figura + palo);
-    }
-    shuffle(mazo);
-    descargarCartas();
+function barajar() {
+  // Empezamos final del mazo
+  // Cogemos la ultima carta y vamos a generar un numero que sea
+  //0-51 e intercambiamos la posicion
+  // repetimos esto hasta lelgar al a primera carta
+  let barajas = [];
+  for (let i = mazo.length - 1; i >= 0; i--) {
+    const posicion = Math.floor(Math.random() * 52);
+    const cartaTemporal = mazo[posicion];
+    mazo[posicion] = mazo[i];
+    mazo[i] = cartaTemporal;
+  }
 }
-
-const valorCarta=(carta)=>{
-    let valor=carta.substring(0,carta.length-1);
-    return isNaN(valor)? (valor==="A")? 11: 10
-    : parseInt(valor);
+function nuevo() {
+  plantarse.style.visibility = 'hidden';
+  const cartas = document.querySelectorAll('#CartasJugador img');
+  for (let i = 1; i < cartas.length; i++) {
+    cartas[i].remove();
+  }
+  newMazo();
 }
-
-const revisar21=(mazoRevisar)=>{
-    let puntos=0;
-    
-    mazoRevisar.forEach(elemento=>puntos+=valorCarta(elemento));
-    
-    for (let i of mazoRevisar)
-    {
-        i=i.substring(0,i.length-1);
-        if(i==="A"){
-            puntos-=10;
-            if(puntos<=21)
-                break;
-        }
-    }
-    return puntos;
+function pedir() {
+  if (plantarse.style.visibility == 'hidden')
+    plantarse.style.visibility = 'visible';
+  const carta = mazo.pop();
+  if (carta) {
+    const cartaNueva = document.createElement('img');
+    cartaNueva.setAttribute('src', `cartas/${carta}.png`);
+    document.getElementById('CartasJugador').append(cartaNueva);
+  }
 }
-
-const dibujarCarta=(lugar, cartaBocaAbajo)=>{
-    const imagen_carta=document.createElement("img");
-    imagen_carta.src=`cartas/${carta}.png`;
-    cartaBocaAbajo=lugar.replaceChild(imagen_carta,cartaBocaAbajo);
-    lugar.append(cartaBocaAbajo);
-    return cartaBocaAbajo;    
-}
-
-const pedirCarta=()=>{
-    carta=mazo.pop();
-    mazoJugador.push(carta);
-
-    puntosJugador+=valorCarta(carta);
-    PuntuacionJugador.textContent=puntosJugador;    
-
-    BocaAbajo=dibujarCarta(CartasJugador,BocaAbajo);
-    BotonPlantarse.removeAttribute("disabled");    
-
-    if(puntosJugador>21)
-    {
-        puntosJugador=revisar21(mazoJugador);
-        PuntuacionJugador.textContent=puntosJugador; 
-
-        if(puntosJugador>21){
-            MensajeJugador.classList.add("perder");
-            MensajeJugador.textContent="Te pasaste!!";
-            BotonPedirCarta.setAttribute("disabled","true");
-            BotonPlantarse.setAttribute("disabled","true");
-            turnoComputadora();
-        }
-    }
-    
-    if(puntosJugador==21)
-    {
-        if (mazoJugador.length==2){
-            MensajeJugador.classList.add("blackjack");
-            MensajeJugador.textContent="BlackJack!!";
-        }
-        else{
-            MensajeJugador.classList.add("ganar");
-            MensajeJugador.textContent="21!!";
-        }
-        BotonPedirCarta.setAttribute("disabled","true");
-        BotonPlantarse.setAttribute("disabled","true");
-        turnoComputadora();
-    }    
-}
-
-const nuevoJuego=()=>{
-    crearMazo();
-    
-    mazoJugador=[];
-    puntosJugador=0;
-    CartasJugador.innerHTML="";
-    CartasJugador.append(BocaAbajo);
-    MensajeJugador.textContent="";
-    MensajeJugador.className="";
-    PuntuacionJugador.textContent=puntosJugador;
-    
-    mazoComputadora=[];
-    puntosComputadora=0;
-    CartasComputadora.innerHTML="";
-    CartasComputadora.append(BocaAbajo2);
-    MensajeComputadora.textContent="";
-    MensajeComputadora.className="";
-    PuntuacionComputadora.textContent=puntosComputadora;
-
-    BotonPedirCarta.removeAttribute("disabled");
-    BotonPlantarse.setAttribute("disabled","true");  
-}
-
-const turnoComputadora=()=>{
-    BotonPedirCarta.setAttribute("disabled","true");
-    BotonPlantarse.setAttribute("disabled","true");
-    
-    do{
-        carta=mazo.pop();
-        mazoComputadora.push(carta);
-
-        puntosComputadora+=valorCarta(carta);
-        PuntuacionComputadora.textContent=puntosComputadora;
-       
-        BocaAbajo2=dibujarCarta(CartasComputadora,BocaAbajo2);
-            
-        if (puntosComputadora>21)
-        {
-            puntosComputadora=revisar21(mazoComputadora);
-            PuntuacionComputadora.textContent=puntosComputadora;
-        }        
-    } while(puntosComputadora<puntosJugador && puntosJugador<=21) 
-
-    if(puntosComputadora>21){
-        MensajeComputadora.classList.add("ganar");
-        MensajeComputadora.textContent="Ganaste!!";
-    }
-    else if (puntosComputadora==puntosJugador)
-    {        
-        if(puntosJugador==21 && mazoJugador.length==2 && mazoComputadora.length>2){
-            MensajeComputadora.classList.add("ganar");
-            MensajeComputadora.textContent="Ganaste!!";
-        }
-        else if (puntosJugador==21 && mazoJugador.length!=2 && mazoComputadora.length==2){
-            MensajeComputadora.classList.add("perder");
-            MensajeComputadora.textContent="BlackJack - Perdiste!!";
-        }
-        else{
-            MensajeComputadora.classList.add("perder");
-            MensajeComputadora.textContent="Empate!!";
-        }
-    }
-    else
-    {
-        MensajeComputadora.classList.add("perder");
-        MensajeComputadora.textContent="Perdiste!!";
-    }
-}
-
-BotonPlantarse.setAttribute("disabled","true");
-crearMazo();
-
-return {nuevoJuego, turnoComputadora, pedirCarta}
-})();
-
-
+function plantar() {}
+newMazo();
+barajar();
+nuevoJuego.addEventListener('click', nuevo);
+pedirCarta.addEventListener('click', pedir);
+plantarse.addEventListener('click', plantar);
+console.log(mazo);
