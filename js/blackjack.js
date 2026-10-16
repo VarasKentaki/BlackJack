@@ -1,6 +1,7 @@
 const nuevoJuego = document.getElementById('NuevoJuego');
 const pedirCarta = document.getElementById('PedirCarta');
 const plantarse = document.getElementById('Plantarse');
+const PuntuacionJugador = document.getElementById('PuntuacionJugador');
 plantarse.style.visibility = 'hidden';
 let mazo = [];
 const palos = ['D', 'H', 'S', 'C'];
@@ -36,6 +37,7 @@ function nuevo() {
     cartas[i].remove();
   }
   newMazo();
+  PuntuacionJugador.textContent = 0;
 }
 function pedir() {
   if (plantarse.style.visibility == 'hidden')
@@ -46,6 +48,7 @@ function pedir() {
     cartaNueva.setAttribute('src', `cartas/${carta}.png`);
     document.getElementById('CartasJugador').append(cartaNueva);
   }
+  PuntuacionJugador.textContent = PuntuacionJugador.textContent * 1 + 1;
 }
 function plantar() {}
 newMazo();
