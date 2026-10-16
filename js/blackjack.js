@@ -2,6 +2,7 @@ const nuevoJuego = document.getElementById('NuevoJuego');
 const pedirCarta = document.getElementById('PedirCarta');
 const plantarse = document.getElementById('Plantarse');
 const PuntuacionJugador = document.getElementById('PuntuacionJugador');
+const PuntuacionComputadora = document.getElementById('PuntuacionComputadora');
 const MensajeJugador = document.getElementById('MensajeJugador');
 const span = document.createElement('span');
 plantarse.style.visibility = 'hidden';
@@ -37,21 +38,26 @@ function nuevo() {
   pedirCarta.style.visibility = 'visible';
   span.remove();
   const cartas = document.querySelectorAll('#CartasJugador img');
+  const cartasC = document.querySelectorAll('#CartasComputadora img');
   for (let i = 1; i < cartas.length; i++) {
     cartas[i].remove();
+  }
+  for (let i = 1; i < cartasC.length; i++) {
+    cartasC[i].remove();
   }
   newMazo();
   barajar();
   PuntuacionJugador.textContent = 0;
+  PuntuacionComputadora.textContent = 0;
 }
-function pedir(opcion) {
+function pedir() {
   if (plantarse.style.visibility == 'hidden')
     plantarse.style.visibility = 'visible';
   const carta = mazo.pop();
   if (carta) {
     const cartaNueva = document.createElement('img');
     cartaNueva.setAttribute('src', `cartas/${carta}.png`);
-    document.getElementById(`${opcion}`).append(cartaNueva);
+    document.getElementById('CartasJugador').append(cartaNueva);
   }
   //2C o 10C
   numero = carta[0];
@@ -88,7 +94,7 @@ function plantar() {
   if (carta) {
     const cartaNueva = document.createElement('img');
     cartaNueva.setAttribute('src', `cartas/${carta}.png`);
-    document.getElementById(`${opcion}`).append(cartaNueva);
+    document.getElementById('CartasComputadora').append(cartaNueva);
   }
 }
 
