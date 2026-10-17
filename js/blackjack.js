@@ -4,9 +4,13 @@ const plantarse = document.getElementById('Plantarse');
 const PuntuacionJugador = document.getElementById('PuntuacionJugador');
 const PuntuacionComputadora = document.getElementById('PuntuacionComputadora');
 const MensajeJugador = document.getElementById('MensajeJugador');
+const MensajeComputadora = document.getElementById('MensajeComputadora');
 const span = document.createElement('span');
+
 plantarse.style.visibility = 'hidden';
 let mazo = [];
+let contadorAs = 0;
+let puntosJugador = 0;
 const palos = ['D', 'H', 'S', 'C'];
 const figuras = ['A', 'J', 'Q', 'K'];
 function newMazo() {
@@ -34,6 +38,8 @@ function barajar() {
   }
 }
 function nuevo() {
+  // * Reiniciamos los puntos del jugador
+  puntosJugador = 0;
   plantarse.style.visibility = 'hidden';
   pedirCarta.style.visibility = 'visible';
   span.remove();
@@ -49,6 +55,11 @@ function nuevo() {
   barajar();
   PuntuacionJugador.textContent = 0;
   PuntuacionComputadora.textContent = 0;
+  MensajeComputadora.textContent = '';
+  MensajeJugador.textContent = '';
+  MensajeComputadora.removeAttribute('class');
+  MensajeJugador.removeAttribute('class');
+  contadorAs = 0;
 }
 function pedir() {
   if (plantarse.style.visibility == 'hidden')
@@ -64,7 +75,15 @@ function pedir() {
   switch (carta.length) {
     case 2:
       if (figuras.includes(numero)) {
-        numero = 10;
+        switch (numero[0]) {
+          case 'A':
+            numero = 1;
+            contadorAs++;
+            break;
+          default:
+            numero = 10;
+            break;
+        }
       } else {
         numero *= 1;
       }
@@ -75,10 +94,21 @@ function pedir() {
     default:
       console.log('Algo mal');
   }
+  // ! Problemas con el AS CUANDO VALE  11
+  //  * El As Tiene 2 valores 1 y 11 necesitamos un contador para saber las veces que entra en el as
+  // * El As cambiara dependiendo de lo que le beneficie al jugador.
+  // * Cada numero me lo guardo a los puntos
 
-  PuntuacionJugador.textContent = PuntuacionJugador.textContent * 1 + numero;
-  numero = PuntuacionJugador.textContent;
-  if (numero > 21) {
+  puntosJugador += numero; // * el as entra como 1
+
+  let total = puntosJugador;
+  if (contadorAs > 0 && puntosJugador + 10 <= 21) {
+    total = puntosJugador + 10; // ? un as vale 11 como se le sumo antes el 1 pues solo sumariamos 10
+  }
+  // * Si no sale ningun As o con el As a 11 es mayor que 21 pues no le suma 10 y lo usa como 1 (Si saliese algun As)
+  PuntuacionJugador.textContent = total;
+
+  if (total > 21) {
     span.style.visibility = 'visible';
     plantarse.style.visibility = 'hidden';
     pedirCarta.style.visibility = 'hidden';
@@ -90,12 +120,74 @@ function pedir() {
 }
 
 function plantar() {
-  const carta = mazo.pop();
-  if (carta) {
-    const cartaNueva = document.createElement('img');
-    cartaNueva.setAttribute('src', `cartas/${carta}.png`);
-    document.getElementById('CartasComputadora').append(cartaNueva);
+  // * Esto es igual con jugador pero las tenemos que reiniciar cada vez que nos plantemos o cuando empecemos partida es igual
+  let puntosPC = 0;
+  let asesPC = 0;
+  let totalPC = 0;
+  do {
+    const carta = mazo.pop();
+
+    if (carta) {
+      const cartaNueva = document.createElement('img');
+      cartaNueva.setAttribute('src', `cartas/${carta}.png`);
+      document.getElementById('CartasComputadora').append(cartaNueva);
+    }
+    numero = carta[0];
+    switch (carta.length) {
+      case 2:
+        if (figuras.includes(numero)) {
+          switch (numero[0]) {
+            case 'A':
+              numero = 1;
+              asesPC++;
+              break;
+            default:
+              numero = 10;
+              break;
+          }
+        } else {
+          numero *= 1;
+        }
+        break;
+      case 3:
+        numero = 10;
+        break;
+      default:
+        console.log('Algo mal');
+    }
+    puntosPC += numero; // * el as entra como 1
+
+    let totalPC = puntosPC;
+    if (asesPC > 0 && puntosPC + 10 <= 21) {
+      totalPC = puntosPC + 10; // ? un as vale 11 como se le sumo antes el 1 pues solo sumariamos 10
+    }
+
+    PuntuacionComputadora.textContent = totalPC;
+  } while (PuntuacionComputadora.textContent * 1 <= 17);
+  if (
+    PuntuacionComputadora.textContent * 1 > 21 ||
+    PuntuacionJugador.textContent * 1 > PuntuacionComputadora.textContent * 1
+  ) {
+    MensajeJugador.className = 'ganar';
+    MensajeComputadora.className = 'perder';
+    MensajeJugador.textContent = 'GANASTE!!!';
+    MensajeComputadora.textContent = 'PERDISTE!!!';
+  } else if (
+    PuntuacionJugador.textContent * 1 <
+    PuntuacionComputadora.textContent * 1
+  ) {
+    MensajeComputadora.className = 'ganar';
+    MensajeJugador.className = 'perder';
+    MensajeComputadora.textContent = 'GANASTE!!!';
+    MensajeJugador.textContent = 'PERDISTE!!!';
+  } else {
+    MensajeComputadora.className = 'perder';
+    MensajeJugador.className = 'perder';
+    MensajeComputadora.textContent = 'EMPATE!!!';
+    MensajeJugador.textContent = 'EMPATE!!!';
   }
+  plantarse.style.visibility = 'hidden';
+  pedirCarta.style.visibility = 'hidden';
 }
 
 newMazo();
